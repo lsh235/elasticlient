@@ -248,13 +248,29 @@ class Client {
      * \param method one of Client::HTTPMethod.
      * \param urlPath part of URL immediately behind "scheme://host/".
      * \param body Elasticsearch request body.
-     *
      * \return cpr::Response if any of node responds to request.
      * \throws ConnectionException if all hosts in cluster failed to respond.
      */
     cpr::Response performRequest(HTTPMethod method,
                                  const std::string &urlPath,
                                  const std::string &body);
+
+    /**
+     * Perform request on nodes until it is successful. Throws exception if all nodes
+     * has failed to respond.
+     * \param ID specification of an Elasticsearch user ID.
+     * \param PW specification of an Elasticsearch user PassWord.
+     * \param method one of Client::HTTPMethod.
+     * \param urlPath part of URL immediately behind "scheme://host/".
+     * \param body Elasticsearch request body.
+     * \return cpr::Response if any of node responds to request.
+     * \throws ConnectionException if all hosts in cluster failed to respond.
+     */
+    cpr::Response performRequest(const std::string& ID,
+                                     const std::string& PW,
+                                     HTTPMethod method,
+                                     const std::string &urlPath,
+                                     const std::string &body);
 
     /**
      * Perform search on nodes until it is successful. Throws exception if all nodes
@@ -271,6 +287,26 @@ class Client {
                          const std::string &docType,
                          const std::string &body,
                          const std::string &routing = std::string());
+
+    /**
+     * Perform search on nodes until it is successful. Throws exception if all nodes
+     * has failed to respond.
+     * \param ID specification of an Elasticsearch user ID.
+     * \param PW specification of an Elasticsearch user PassWord.
+     * \param indexName specification of an Elasticsearch index.
+     * \param docType specification of an Elasticsearch document type.
+     * \param body Elasticsearch request body.
+     * \param routing Elasticsearch routing. If empty, no routing has been used.
+     *
+     * \return cpr::Response if any of node responds to request.
+     * \throws ConnectionException if all hosts in cluster failed to respond.
+     */
+    cpr::Response search(const std::string &ID,
+                                 const std::string &PW,
+                                 const std::string &indexName,
+                                 const std::string &docType,
+                                 const std::string &body,
+                                 const std::string &routing = std::string());
 
     /**
      * Get document with specified id from cluster. Throws exception if all nodes
@@ -305,6 +341,28 @@ class Client {
                         const std::string &id,
                         const std::string &body,
                         const std::string &routing = std::string());
+
+    /**
+     * Index new document to cluster. Throws exception if all nodes has failed to respond.
+     * \param ID specification of an Elasticsearch user ID.
+     * \param PW specification of an Elasticsearch user PassWord.
+     * \param indexName specification of an Elasticsearch index.
+     * \param docType specification of an Elasticsearch document type.
+     * \param body Elasticsearch request body.
+     * \param id Id of document which should be indexed. If empty, id will be generated
+     *           automatically by Elasticsearch cluster.
+     * \param routing Elasticsearch routing. If empty, no routing has been used.
+     *
+     * \return cpr::Response if any of node responds to request.
+     * \throws ConnectionException if all hosts in cluster failed to respond.
+     */
+    cpr::Response index(const std::string &ID,
+                            const std::string &PW,
+                            const std::string &indexName,
+                            const std::string &docType,
+                            const std::string &id,
+                            const std::string &body,
+                            const std::string &routing = std::string());
 
     /**
      * Delete document with specified id from cluster. Throws exception if all nodes

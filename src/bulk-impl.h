@@ -103,6 +103,7 @@ class Bulk::Implementation {
      * Request errors are counted to the bulk counters.
      */
     void run(const IBulkData &bulk);
+    void run(const std::string &ID, const std::string &PW, const IBulkData &bulk);
 
   private:
     /// Check correctness of bulk result and update error counters.

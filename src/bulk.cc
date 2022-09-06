@@ -195,6 +195,25 @@ void Bulk::Implementation::run(const IBulkData &bulk) {
     }
 }
 
+void Bulk::Implementation::run(const std::string &ID, const std::string &PW, const IBulkData &bulk) {
+    std::string body = bulk.body();
+    std::string indexName = bulk.indexName();
+    try {
+        const cpr::Response r = client->performRequest(ID,
+                                                       PW,
+                                                       Client::HTTPMethod::POST,
+                                                       indexName + "/_bulk",
+                                                       body);
+        if (r.status_code / 100 != 2) {
+            throw ConnectionException("Elastic node not respond with status 2xx.");
+        }
+        processResult(r.text, bulk.size());
+    } catch(const ConnectionException &ex) {
+        LOG(LogLevel::ERROR, "Elastic cluster while indexing bulk: %s", ex.what());
+        errCount += bulk.size();
+    }
+}
+
 
 std::size_t Bulk::perform(const IBulkData &bulk) {
     if (bulk.empty()) { return 0; }
@@ -205,6 +224,15 @@ std::size_t Bulk::perform(const IBulkData &bulk) {
     return impl->errCount;
 }
 
+std::size_t Bulk::perform(const std::string &ID, const std::string &PW, const IBulkData &bulk)
+{
+    if (bulk.empty()) { return 0; }
+
+    LOG(LogLevel::INFO, "Going to index %lu elements.", bulk.size());
+    impl->errCount = 0;
+    impl->run(ID, PW, bulk);
+    return impl->errCount;
+}
 
 void Bulk::Implementation::processResult(
         const std::string &result, std::size_t size)

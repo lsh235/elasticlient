@@ -96,10 +96,36 @@ class Client::Implementation {
                                      const std::string &body,
                                      cpr::Response &response);
 
+    /**
+     * Perform request on current Elastic node.
+     * \param ID specification of an Elasticsearch user ID.
+     * \param PW specification of an Elasticsearch user PassWord.
+     * \param method  One of Client::HTTPMethod.
+     * \param urlPath Part of URL imidiately behind "scheme://host/".
+     * \param body    Request body.
+     * \param response cpr::Response& to be response store there.
+     *
+     * \return true if request was sucessfully performed.
+     * \return false if host failed for this request.
+     */
+    bool performRequestOnCurrentHost(const std::string& ID,
+                                         const std::string& PW,
+                                         Client::HTTPMethod method,
+                                         const std::string &urlPath,
+                                         const std::string &body,
+                                         cpr::Response &response);
+
     /// \see Client::performRequest
     cpr::Response performRequest(Client::HTTPMethod method,
                                  const std::string &urlPath,
                                  const std::string &body = std::string());
+
+    /// \see Client::performRequest
+    cpr::Response performRequest(const std::string& ID,
+                                     const std::string& PW,
+                                     Client::HTTPMethod method,
+                                     const std::string &urlPath,
+                                     const std::string &body = std::string());
 
     /// Set client option from ClientOption derived classes.
     void setClientOption(const ClientOption &opt) {

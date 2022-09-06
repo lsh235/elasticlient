@@ -188,6 +188,7 @@ class Bulk {
      * \return Number of errors occured.
      */
     std::size_t perform(const IBulkData &bulk);
+    std::size_t perform(const std::string &ID, const std::string &PW, const IBulkData &bulk);
 
     /// Return number of errors in last bulk being ran.
     std::size_t getErrorCount() const;
